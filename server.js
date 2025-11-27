@@ -20,6 +20,7 @@ const ZAPIER_WEBHOOK_INDICACAO = 'https://hooks.zapier.com/hooks/catch/SEU_ID_AQ
 // ==== ORIGENS PERMITIDAS ====
 const ALLOWED_ORIGINS = [
     'https://roleta-raspadinha.onrender.com',
+    'https://roleta-backend-zx8t.onrender.com',   // domínio do backend no Render (onde você está acessando agora)
     'https://geo-iot.com',
     'http://localhost:3000',
     'http://localhost:5500',
