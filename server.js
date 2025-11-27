@@ -973,7 +973,11 @@ app.get('/api/indicacoes/:participante_id', async (req, res) => {
 app.get('/api/participantes-com-indicacoes', async (req, res) => {
     try {
         const result = await pool.query(
-            `SELECT p.*, indicador.nome as indicador_nome, indicador.email as indicador_email 
+            `SELECT 
+                 p.*, 
+                 indicador.nome     AS indicador_nome, 
+                 indicador.email    AS indicador_email,
+                 indicador.whatsapp AS indicador_whatsapp
              FROM participantes p 
              LEFT JOIN participantes indicador ON p.indicado_por = indicador.id 
              ORDER BY p.data_cadastro DESC`
@@ -984,6 +988,7 @@ app.get('/api/participantes-com-indicacoes', async (req, res) => {
         res.status(500).json({ error: 'Erro ao buscar' });
     }
 });
+
 
 // ============================================
 // SISTEMA DE COMANDOS (SSE + POLLING)
