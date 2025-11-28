@@ -32,7 +32,6 @@ const ALLOWED_ORIGINS = [
 // CONFIGURAÇÃO DO POSTGRESQL
 // ============================================
 
-const { Pool } = require('pg');
 
 // Validação explícita
 if (!process.env.DATABASE_URL) {
