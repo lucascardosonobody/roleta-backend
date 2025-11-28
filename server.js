@@ -32,7 +32,6 @@ const ALLOWED_ORIGINS = [
 // CONFIGURAÇÃO DO POSTGRESQL
 // ============================================
 
-
 // Validação explícita
 if (!process.env.DATABASE_URL) {
   console.error('❌ ERRO CRÍTICO: DATABASE_URL não está definida nas variáveis de ambiente!');
@@ -40,49 +39,67 @@ if (!process.env.DATABASE_URL) {
   process.exit(1);
 }
 
+// Log da URL (MASCARADO para segurança)
+const maskedUrl = process.env.DATABASE_URL.replace(/:([^:@]+)@/, ':****@');
+console.log('🔍 DATABASE_URL detectada:', maskedUrl);
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   },
-  // ⚠️ IMPORTANTE: Session Pooler tem limites diferentes
-  max: 10, // Reduzi de 20 para 10 (Session Pooler tem menos conexões disponíveis)
+  max: 10,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 10000, // Aumentei para 10s (pooler pode demorar mais)
-  // Configurações adicionais para Session Pooler
-  statement_timeout: 60000, // 60 segundos timeout para queries
+  connectionTimeoutMillis: 10000,
+  statement_timeout: 60000,
   query_timeout: 60000,
 });
-
-// Testa a conexão na inicialização
-pool.connect()
-  .then(client => {
-    console.log('✅ PostgreSQL conectado via Session Pooler do Supabase!');
-    client.release();
-  })
-  .catch(err => {
-    console.error('❌ ERRO ao conectar ao PostgreSQL:', err.message);
-    console.error('Stack:', err.stack);
-    process.exit(1);
-  });
 
 // Event listeners para monitorar o pool
 pool.on('error', (err) => {
   console.error('❌ Erro inesperado no pool do PostgreSQL:', err);
 });
 
-module.exports = pool;
-
-// Testar conexão
-pool.connect((err, client, release) => {
-    if (err) {
-        console.error('❌ Erro ao conectar ao PostgreSQL:', err.stack);
-    } else {
-        console.log('✅ Conectado ao PostgreSQL');
-        release();
-        criarTabelas();
-    }
+pool.on('connect', (client) => {
+  console.log('✅ Nova conexão estabelecida ao PostgreSQL');
 });
+
+// Testa a conexão e cria tabelas
+async function inicializarBanco() {
+  let client;
+  
+  try {
+    console.log('🔄 Tentando conectar ao PostgreSQL...');
+    client = await pool.connect();
+    
+    console.log('✅ PostgreSQL conectado via Session Pooler do Supabase!');
+    
+    // Testa uma query simples
+    const result = await client.query('SELECT NOW() as now');
+    console.log('🕐 Timestamp do banco:', result.rows[0].now);
+    
+    client.release();
+    
+    // Agora cria as tabelas
+    await criarTabelas();
+    
+  } catch (err) {
+    console.error('❌ ERRO FATAL ao conectar ao PostgreSQL:', err.message);
+    console.error('📋 Detalhes completos:', err);
+    
+    // Dicas de troubleshooting
+    console.error('\n🔧 TROUBLESHOOTING:');
+    console.error('1. Verifique se DATABASE_URL está correta no Render');
+    console.error('2. Confirme que a senha não tem caracteres especiais não escapados');
+    console.error('3. Teste a conexão direto no Supabase (SQL Editor)');
+    console.error('4. Verifique se o IP do Render está liberado no Supabase (se houver restrição)');
+    
+    process.exit(1);
+  }
+}
+
+// Chama a inicialização
+inicializarBanco();
 
 // ============================================
 // CONFIGURAÇÃO DE CORS - PRIMEIRA COISA!
