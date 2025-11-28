@@ -32,13 +32,47 @@ const ALLOWED_ORIGINS = [
 // CONFIGURAÇÃO DO POSTGRESQL
 // ============================================
 
+const { Pool } = require('pg');
+
+// Validação explícita
+if (!process.env.DATABASE_URL) {
+  console.error('❌ ERRO CRÍTICO: DATABASE_URL não está definida nas variáveis de ambiente!');
+  console.error('👉 Verifique as variáveis de ambiente no painel do Render');
+  process.exit(1);
+}
+
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL || 'postgresql://usuario:senha@localhost:5432/sorteios_db',
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-    max: 20,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 2000,
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  },
+  // ⚠️ IMPORTANTE: Session Pooler tem limites diferentes
+  max: 10, // Reduzi de 20 para 10 (Session Pooler tem menos conexões disponíveis)
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 10000, // Aumentei para 10s (pooler pode demorar mais)
+  // Configurações adicionais para Session Pooler
+  statement_timeout: 60000, // 60 segundos timeout para queries
+  query_timeout: 60000,
 });
+
+// Testa a conexão na inicialização
+pool.connect()
+  .then(client => {
+    console.log('✅ PostgreSQL conectado via Session Pooler do Supabase!');
+    client.release();
+  })
+  .catch(err => {
+    console.error('❌ ERRO ao conectar ao PostgreSQL:', err.message);
+    console.error('Stack:', err.stack);
+    process.exit(1);
+  });
+
+// Event listeners para monitorar o pool
+pool.on('error', (err) => {
+  console.error('❌ Erro inesperado no pool do PostgreSQL:', err);
+});
+
+module.exports = pool;
 
 // Testar conexão
 pool.connect((err, client, release) => {
