@@ -5,6 +5,7 @@ const session = require('express-session');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { Pool } = require('pg');
+const pgSession = require('connect-pg-simple')(session);
 const path = require('path');
 
 const app = express();
@@ -147,14 +148,19 @@ app.use(cors({
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
+
 app.use(session({
+    store: new pgSession({
+        pool: pool,                // Usa o pool do PostgreSQL que já existe
+        tableName: 'user_sessions' // Nome da tabela de sessões
+    }),
     secret: process.env.SESSION_SECRET || 'umaSenhaBemSecretaAqui_MUDE_ISSO',
     resave: false,
     saveUninitialized: false,
     cookie: {
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000
+        maxAge: 24 * 60 * 60 * 1000 // 24 horas
     }
 }));
 
