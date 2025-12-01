@@ -20,17 +20,18 @@ const CONFIG = {
             return 'http://localhost:3000';
         }
         
-        // Render.com
+        // Render.com (se um dia você abrir o front direto lá)
         if (hostname.includes('onrender.com')) {
             return `${protocol}//${hostname}`;
         }
 
-         // 👉 Front no Vercel deve apontar para o backend no Render
+        // 👉 Front no Vercel: API sempre no backend do Render
         if (hostname.includes('vercel.app') || hostname === 'nasorte.vercel.app') {
-            return 'https://roleta-backend.onrender.com'; // <-- URL do seu Render
+            // BACKEND NO RENDER
+            return 'https://roleta-backend-zx8t.onrender.com';
         }
         
-        // Domínio em produção
+        // Domínio em produção (se usar domínio próprio no futuro)
         if (hostname === 'geo-iot.com' || hostname === 'www.geo-iot.com') {
             return 'https://geo-iot.com';
         }
@@ -44,63 +45,7 @@ const CONFIG = {
         return this.DOMAIN;
     },
 
-    // 📡 ENDPOINTS DA API
-    API: {
-        // === PARTICIPANTES ===
-        PARTICIPANTES: '/api/participantes',
-        PARTICIPANTES_ATIVOS: '/api/participantes-ativos',
-        PARTICIPANTES_COM_INDICACOES: '/api/participantes-com-indicacoes',
-        INDICADOS: '/api/indicados',
-        MEUS_INDICADOS: (id) => `/api/meus-indicados/${id}`,
-        
-        // === PRÊMIOS ===
-        PREMIOS: '/api/premios',
-        PREMIOS_ATIVOS: '/api/premios-ativos',
-        PREMIO_BY_ID: (id) => `/api/premios/${id}`,
-        
-        // === SORTEIOS ===
-        SORTEIOS_AGENDADOS: '/api/sorteios-agendados',
-        SORTEIO_BY_ID: (id) => `/api/sorteios-agendados/${id}`,
-        SORTEIO_ATIVO_AGORA: '/api/sorteio-ativo-agora',
-        GERAR_SORTEIO_SINCRONIZADO: '/api/gerar-sorteio-sincronizado',
-        SORTEIO_SINCRONIZADO_BY_SEED: (seed) => `/api/sorteio-sincronizado/${seed}`,
-        
-        // === RASPADINHAS ===
-        RASPADINHAS_AGENDADAS: '/api/raspadinhas-agendadas',
-        RASPADINHA_BY_ID: (id) => `/api/raspadinhas-agendadas/${id}`,
-        RASPADINHA_ATIVA_AGORA: '/api/raspadinha-ativa-agora',
-        
-        // === HISTÓRICO ===
-        HISTORICO: '/api/historico-sorteios',
-        LIMPAR_REGISTROS_INVALIDOS: '/api/limpar-registros-invalidos',
-        TESTE_HISTORICO: '/api/teste-historico',
-        
-        // === DASHBOARD ===
-        DASHBOARD: '/api/dashboard',
-        
-        // === CADASTRO E AÇÕES ===
-        SIGNUP: '/api/signup',
-        INDICACOES: '/api/indicacoes',
-        REGISTRAR_SORTEIO: '/api/registrar-sorteio',
-        REGISTRAR_AVALIACAO: '/api/registrar-avaliacao',
-        
-        // === COMANDOS (Sistema de comunicação Admin -> Cliente) ===
-        VERIFICAR_COMANDO: '/api/verificar-comando',
-        ENVIAR_COMANDO: '/api/enviar-comando',
-        LIMPAR_COMANDO: '/api/limpar-comando',
-        STREAM_COMANDOS: '/api/stream-comandos',
-        
-        // === CONFIGURAÇÕES ===
-        CONFIGURACOES: '/api/configuracoes',
-        CONFIG_SORTEIO: '/api/config-sorteio',
-        VERIFICAR_SORTEIO: '/api/verificar-sorteio',
-        
-        // === ZAPIER ===
-        TESTAR_ZAPIER: '/api/testar-zapier',
-        
-        // === UTILITÁRIOS ===
-        CORRIGIR_HORARIOS: '/api/corrigir-horarios'
-    },
+
 
     // 📁 CAMINHOS DOS ARQUIVOS
     PATHS: {
@@ -173,6 +118,7 @@ const CONFIG = {
         ALLOWED_ORIGINS: [
             'https://roleta-raspadinha.onrender.com',
             'https://roleta-raspadinha-m7li2z5db-lucascardosonobodys-projects.vercel.app/dashboard.html',
+            'https://nasorte.vercel.app',
             'https://geo-iot.com',
             'http://localhost:3000',
             'http://localhost:5500',
