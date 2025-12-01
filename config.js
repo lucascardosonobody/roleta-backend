@@ -24,6 +24,11 @@ const CONFIG = {
         if (hostname.includes('onrender.com')) {
             return `${protocol}//${hostname}`;
         }
+
+         // 👉 Front no Vercel deve apontar para o backend no Render
+        if (hostname.includes('vercel.app') || hostname === 'nasorte.vercel.app') {
+            return 'https://roleta-backend.onrender.com'; // <-- URL do seu Render
+        }
         
         // Domínio em produção
         if (hostname === 'geo-iot.com' || hostname === 'www.geo-iot.com') {
