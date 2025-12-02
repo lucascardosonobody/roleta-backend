@@ -6,6 +6,7 @@
     <title>Dashboard Principal - Sistema Sorteio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="config.js"></script>
     <style>
         .fade-in {
             animation: fadeIn 0.6s;
@@ -237,7 +238,8 @@
 
     <script>
         let chartPremios;
-        const API_BASE = window.location.origin;
+        const API_BASE = CONFIG.API_BASE;
+
 
         // ============================================
         // UTILITÁRIOS
@@ -586,7 +588,7 @@
         function logout() {
             if (confirm('❓ Deseja realmente sair?')) {
                 console.log('👋 Fazendo logout...');
-                window.location.href = '/logout';
+                window.location.href = CONFIG.API_BASE + '/logout';
             }
         }
 

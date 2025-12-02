@@ -9,6 +9,7 @@ ARQUIVO 3: admin.html - Painel Administrativo Completo
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Administrativo - Roleta</title>
+    <script src="config.js"></script>
     <style>
         * {
             margin: 0;
@@ -514,150 +515,184 @@ ARQUIVO 3: admin.html - Painel Administrativo Completo
     </aside>
 
     <div class="container">
-        <!-- Header -->
-        <header>
-            <h1>⚙️ Painel Administrativo</h1>
-            <div>
-                <button class="btn btn-primary" onclick="abrirModalNovoSorteio()">
-                    ➕ Novo Sorteio Agendado
-                </button>
-                <button class="btn btn-success" onclick="recarregarDados()">
-                    🔄 Atualizar
-                </button>
-            </div>
-        </header>
-
-
-                <!-- Abas de Navegação -->
-        <div class="card" style="padding: 0; overflow: hidden;">
-            <div style="display: flex; gap: 0; border-bottom: 3px solid #3498db;">
-                <button class="tab-button active" onclick="mudarAba('participantes')" style="flex: 1; padding: 15px; border: none; background: #3498db; color: white; cursor: pointer; font-weight: 700; transition: all 0.3s;">
-                    👥 Participantes
-                </button>
-                <button class="tab-button" onclick="mudarAba('premios')" style="flex: 1; padding: 15px; border: none; background: white; color: #2c3e50; cursor: pointer; font-weight: 700; transition: all 0.3s;">
-                    🎁 Prêmios
-                </button>
-                <button class="tab-button" onclick="mudarAba('sorteios')" style="flex: 1; padding: 15px; border: none; background: white; color: #2c3e50; cursor: pointer; font-weight: 700; transition: all 0.3s;">
-                    📅 Roleta Agendada
-                </button>
-                <button class="tab-button" onclick="mudarAba('raspadinha')" style="flex: 1; padding: 15px; border: none; background: white; color: #2c3e50; cursor: pointer; font-weight: 700; transition: all 0.3s;">
-                    🎰 Raspadinha Agendada
-                </button>
-            </div>
-        </div>
-
-        <!-- Stats -->
-        <div class="stats">
-            <div class="stat-card">
-                <h3 id="total-participantes">0</h3>
-                <p>Participantes</p>
-            </div>
-            <div class="stat-card">
-                <h3 id="total-premios">0</h3>
-                <p>Prêmios Cadastrados</p>
-            </div>
-            <div class="stat-card">
-                <h3 id="premios-ativos">0</h3>
-                <p>Prêmios Ativos</p>
-            </div>
-        </div>
-
-       <!-- Participantes -->
-        <div class="card tab-content" id="aba-participantes">
-            <h2>👥 Participantes Cadastrados</h2>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>WhatsApp</th>
-                            <th>E-mail</th>
-                            <th>Data Cadastro</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabela-participantes">
-                        <tr>
-                            <td colspan="5" class="loading">
-                                <div class="spinner"></div>
-                                Carregando...
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-            <!-- Prêmios -->
-        <div class="card tab-content" id="aba-premios" style="display: none;">
-            <h2>🎁 Gerenciar Prêmios</h2>
-            
-            <div style="margin-bottom: 20px;">
-                <button class="btn btn-primary" onclick="abrirModal('modal-novo-premio')">
-                    ➕ Adicionar Novo Prêmio
-                </button>
-            </div>
-            
-            <div class="table-container">
-                <table id="premiosTable">
-                    <thead>
-                        <tr>
-                            <th>Ícone</th>
-                            <th>Nome do Prêmio</th>
-                            <th>Descrição</th>
-                            <th>Tipo</th>
-                            <th>Probabilidade</th>
-                            <th>Status</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="7" style="text-align: center; padding: 20px;">
-                                Carregando prêmios...
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div> <!-- Fim do card de Prêmios -->
-
-    <!-- ============================================
-        SORTEIOS AGENDADOS
-    ============================================ -->
-    <div class="card tab-content" id="aba-sorteios" style="display: none;">
-        <h2>📅 Sorteios Agendados</h2>
-        
-        <!-- Botão Novo Sorteio -->
-        <div style="margin-bottom: 20px;">
-            <button class="btn btn-primary" onclick="abrirModal('modal-novo-sorteio')">
+    <!-- Header -->
+    <header class="page-header">
+        <h1>⚙️ Painel Administrativo</h1>
+        <div class="page-header-actions">
+            <button class="btn btn-primary" onclick="abrirModalNovoSorteio()">
                 ➕ Novo Sorteio Agendado
+            </button>
+            <button class="btn btn-success" onclick="recarregarDados()">
+                🔄 Atualizar
+            </button>
+        </div>
+    </header>
+
+    <!-- Abas de Navegação -->
+    <div class="card card-tabs">
+        <div class="tabs-nav">
+            <button
+                class="tab-button active"
+                onclick="mudarAba('participantes')"
+            >
+                👥 Participantes
+            </button>
+
+            <button
+                class="tab-button"
+                onclick="mudarAba('premios')"
+            >
+                🎁 Prêmios
+            </button>
+
+            <button
+                class="tab-button"
+                onclick="mudarAba('sorteios')"
+            >
+                📅 Roleta Agendada
+            </button>
+
+            <button
+                class="tab-button"
+                onclick="mudarAba('raspadinha')"
+            >
+                🎰 Raspadinha Agendada
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <section class="stats">
+        <div class="stat-card">
+            <h3 id="total-participantes">0</h3>
+            <p>Participantes</p>
+        </div>
+        <div class="stat-card">
+            <h3 id="total-premios">0</h3>
+            <p>Prêmios Cadastrados</p>
+        </div>
+        <div class="stat-card">
+            <h3 id="premios-ativos">0</h3>
+            <p>Prêmios Ativos</p>
+        </div>
+    </section>
+
+    <!-- Participantes -->
+    <section class="card tab-content" id="aba-participantes">
+        <h2>👥 Participantes Cadastrados</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>WhatsApp</th>
+                        <th>E-mail</th>
+                        <th>Data Cadastro</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-participantes">
+                    <tr>
+                        <td colspan="5" class="loading">
+                            <div class="spinner"></div>
+                            Carregando...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Prêmios -->
+    <section class="card tab-content" id="aba-premios" style="display: none;">
+        <h2>🎁 Gerenciar Prêmios</h2>
+
+        <div class="card-actions">
+            <button class="btn btn-primary" onclick="abrirModal('modal-novo-premio')">
+                ➕ Adicionar Novo Prêmio
             </button>
         </div>
 
-        <!-- Filtros -->
-        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                <div>
-                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Status:</label>
-                    <select id="filtroStatusSorteio" onchange="filtrarSorteiosAgendados()" style="width: 100%; padding: 8px; border: 2px solid #ddd; border-radius: 8px;">
-                        <option value="todos">Todos</option>
-                        <option value="pendente">Pendentes</option>
-                        <option value="executado">Executados</option>
-                        <option value="cancelado">Cancelados</option>
-                    </select>
-                </div>
-                <div>
-                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Data Inicial:</label>
-                    <input type="date" id="filtroDataInicio" onchange="filtrarSorteiosAgendados()" style="width: 100%; padding: 8px; border: 2px solid #ddd; border-radius: 8px;">
-                </div>
-                <div>
-                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Data Final:</label>
-                    <input type="date" id="filtroDataFim" onchange="filtrarSorteiosAgendados()" style="width: 100%; padding: 8px; border: 2px solid #ddd; border-radius: 8px;">
-                </div>
+        <div class="table-container">
+            <table id="premiosTable">
+                <thead>
+                    <tr>
+                        <th>Ícone</th>
+                        <th>Nome do Prêmio</th>
+                        <th>Descrição</th>
+                        <th>Tipo</th>
+                        <th>Probabilidade</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 20px;">
+                            Carregando prêmios...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+
+<!-- ============================================
+    SORTEIOS AGENDADOS
+============================================ -->
+<section class="card tab-content" id="aba-sorteios" style="display: none;">
+    <h2>📅 Sorteios Agendados</h2>
+
+    <!-- Botão Novo Sorteio -->
+    <div class="card-actions">
+        <button class="btn btn-primary" onclick="abrirModalNovoSorteio()">
+            ➕ Novo Sorteio Agendado
+        </button>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filtros card-filtros">
+        <div class="filtros-grid">
+            <div class="filtro-item">
+                <label class="filtro-label">Status:</label>
+                <select
+                    id="filtroStatusSorteio"
+                    onchange="filtrarSorteiosAgendados()"
+                    class="filtro-input"
+                >
+                    <option value="todos">Todos</option>
+                    <option value="pendente">Pendentes</option>
+                    <option value="executado">Executados</option>
+                    <option value="cancelado">Cancelados</option>
+                </select>
+            </div>
+
+            <div class="filtro-item">
+                <label class="filtro-label">Data Inicial:</label>
+                <input
+                    type="date"
+                    id="filtroDataInicio"
+                    onchange="filtrarSorteiosAgendados()"
+                    class="filtro-input"
+                >
+            </div>
+
+            <div class="filtro-item">
+                <label class="filtro-label">Data Final:</label>
+                <input
+                    type="date"
+                    id="filtroDataFim"
+                    onchange="filtrarSorteiosAgendados()"
+                    class="filtro-input"
+                >
             </div>
         </div>
+    </div>
+
+    <!-- (continua aqui sua tabela de sorteios...) -->
+</section>
+
 
         <!-- Tabela de Sorteios -->
         <div class="table-container">
@@ -683,6 +718,7 @@ ARQUIVO 3: admin.html - Painel Administrativo Completo
             </table>
         </div>
     </div>
+</div> <!-- fim .container -->
 
     <!-- Modal: Novo Sorteio Agendado -->
     <div class="modal" id="modal-novo-sorteio">
@@ -989,7 +1025,7 @@ ARQUIVO 3: admin.html - Painel Administrativo Completo
         <div style="display: flex; gap: 10px;">
             <button 
                 id="btn-sorteio-automatico"
-                onclick="executarSorteioAutomatico(event)"
+                onclick="ativarSorteioAutomatico()"
                 style="width: 100%; background: #4CAF50; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s;"
             >
                 ✅ ATIVAR SORTEIO AUTOMÁTICO
@@ -997,7 +1033,7 @@ ARQUIVO 3: admin.html - Painel Administrativo Completo
             
             <button 
                 id="btn-desativar-sorteio"
-                onclick="executarSorteioAutomatico()"
+                onclick="desativarSorteioAutomatico()"
                 style="flex: 1; background: #f44336; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s; display: none;"
                 onmouseover="this.style.background='#da190b'"
                 onmouseout="this.style.background='#f44336'"
@@ -1032,14 +1068,13 @@ ARQUIVO 3: admin.html - Painel Administrativo Completo
     animation: pulse 2s infinite;
 }
 </style>
-        <script src="/config.js"></script>
         <script>
+            let sorteioEmExecucao = false;
+
 
             // ============================================
             // VARIÁVEIS GLOBAIS DO SORTEIO AUTOMÁTICO
             // ============================================
-            let sorteioAutomaticoAtivo = false;
-            let intervalVerificacao = null;
             let roletaWindow = null;
 
             // ============================================
@@ -1121,14 +1156,41 @@ ARQUIVO 3: admin.html - Painel Administrativo Completo
                 document.head.appendChild(style);
             }
 
-        // ========================================
-        // SISTEMA DE SORTEIO AUTOMÁTICO
-        // ========================================
+            // ============================================
+            // ATIVAR SORTEIO AUTOMÁTICO (LOOP)
+            // ============================================
+            let sorteioAutomaticoAtivo = false;
+            let intervalVerificacao = null;
 
-        let sorteioConfig = {
-            ativo: false,
-            participantes_necessarios: 10
-        };
+            function ativarSorteioAutomatico() {
+                if (sorteioAutomaticoAtivo) {
+                    console.log('⚠️ Sorteio automático já está ativo');
+                    return;
+                }
+
+                const input = document.getElementById('participantes-necessarios');
+                const participantesNecessarios = parseInt(input.value, 10);
+
+                if (!participantesNecessarios || participantesNecessarios <= 0) {
+                    alert('Informe um número válido de participantes');
+                    return;
+                }
+
+                sorteioAutomaticoAtivo = true;
+                atualizarBotaoSorteio(true);
+
+                console.log('✅ Sorteio automático ATIVADO');
+                mostrarNotificacao('✅ Sorteio automático ativado', 'success');
+
+                // 🔁 Loop de verificação
+                intervalVerificacao = setInterval(() => {
+                    if (!sorteioAutomaticoAtivo) return;
+                    if (sorteioEmExecucao) return;
+
+                    executarSorteioAutomatico();
+                }, 5000); // verifica a cada 5s
+            }
+
 
        
             // ============================================
@@ -1136,135 +1198,70 @@ ARQUIVO 3: admin.html - Painel Administrativo Completo
             // ============================================
 
             async function executarSorteioAutomatico() {
-                console.log('🔄 executarSorteioAutomatico() chamada');
-                console.log('📊 Estado atual:', sorteioAutomaticoAtivo);
-                
-                if (!sorteioAutomaticoAtivo) {
-                    // ========================================
-                    // ATIVAR SORTEIO AUTOMÁTICO INFINITO
-                    // ========================================
-                    console.log('🚀 Iniciando sorteio automático INFINITO...');
-                    
-                    // Validar número de participantes
-                    const input = document.getElementById('participantes-necessarios');
-                    if (!input) {
-                        console.error('❌ Campo de participantes não encontrado!');
-                        alert('⚠️ Erro: Campo de configuração não encontrado!');
+                // 🚫 Trava de segurança
+                if (sorteioEmExecucao) {
+                    console.log('⛔ Sorteio já em execução. Ignorando chamada.');
+                    return;
+                }
+
+                try {
+                    sorteioEmExecucao = true;
+                    console.log('🔒 Trava de execução ativada');
+
+                    // Buscar participantes atualizados
+                    const response = await CONFIG.fetch(CONFIG.API.PARTICIPANTES);
+                    const participantesAtuais = response.participantes.length;
+                    const participantesNecessarios = response.participantesNecessarios;
+
+                    console.log(`👥 Participantes: ${participantesAtuais}/${participantesNecessarios}`);
+
+                    // ✅ VERIFICAÇÃO ÚNICA
+                    if (participantesAtuais < participantesNecessarios) {
+                        console.log('⏳ Ainda não atingiu o número mínimo');
+                        sorteioEmExecucao = false; // libera a trava
                         return;
                     }
-                    
-                    const participantesNecessarios = parseInt(input.value);
-                    
-                    if (!participantesNecessarios || participantesNecessarios < 1) {
-                        alert('⚠️ Configure o número de participantes necessários primeiro!');
-                        console.error('❌ Número inválido:', participantesNecessarios);
-                        return;
-                    }
-                    
-                    console.log('✅ Participantes necessários:', participantesNecessarios);
-                    console.log('♾️  MODO INFINITO: Sorteios continuarão até desativar');
-                    
-                    // Atualizar estado
-                    sorteioAutomaticoAtivo = true;
-                    
-                    // Atualizar botão
-                    atualizarBotaoSorteio(true);
-                    
-                    console.log('✅ Sorteio automático ATIVADO!');
-                    console.log('⏱️ Verificando a cada 10 segundos...');
-                    
-                    // Iniciar verificação periódica INFINITA
-                    intervalVerificacao = setInterval(async () => {
-                        console.log('🔍 Verificando participantes...');
-                        
-                        try {
-                            // Buscar participantes ativos
-                            const response = await fetch(CONFIG.buildURL(CONFIG.API.PARTICIPANTES_ATIVOS), {
-                                method: 'GET',  
-                                headers: { 
-                                    'Content-Type': 'application/json',
-                                    'Accept': 'application/json'
-                                }
-                            });
-                            
-                            console.log('📡 Status da resposta:', response.status);
-                            
-                            // Validar se a resposta é JSON
-                            const contentType = response.headers.get('content-type');
-                            if (!contentType || !contentType.includes('application/json')) {
-                                console.error('❌ Resposta não é JSON!');
-                                console.error('Content-Type recebido:', contentType);
-                                
-                                const texto = await response.text();
-                                console.error('Resposta (primeiros 500 chars):', texto.substring(0, 500));
-                                return;
-                            }
-                            
-                            if (!response.ok) {
-                                console.error('❌ Erro HTTP:', response.status);
-                                const errorText = await response.text();
-                                console.error('Erro:', errorText);
-                                return;
-                            }
-                            
-                            const data = await response.json();
-                            console.log('✅ Dados recebidos:', data);
-                            
-                            const participantesAtuais = data.participantes ? data.participantes.length : 0;
-                            
-                            console.log(`📊 Participantes: ${participantesAtuais}/${participantesNecessarios}`);
-                            
-                            // ✅ VERIFICAR SE ATINGIU O NÚMERO
-                            if (participantesAtuais >= participantesNecessarios) {
-                                console.log('🎯 Número atingido! Enviando comando...');
-                                console.log('♾️  Modo infinito ativo - continuará após este sorteio');
-                                
-                                // Enviar comando de sorteio
-                                const comandoResponse = await fetch(CONFIG.buildURL(CONFIG.API.ENVIAR_COMANDO), {
-                                    method: 'POST', 
-                                    headers: { 
-                                        'Content-Type': 'application/json',
-                                        'Accept': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        tipo: 'INICIAR_SORTEIO',
-                                        acao: 'sortear',
-                                        participantes: data.participantes,
-                                        timestamp: Date.now()
-                                    })
-                                });
-                                
-                                if (comandoResponse.ok) {
-                                    const resultado = await comandoResponse.json();
-                                    console.log('✅ Comando enviado!', resultado);
-                                    console.log('🎰 Roleta girando...');
-                                    console.log('♾️  Aguardando próximo grupo de participantes...');
-                                    
-                                    // ❌ NÃO DESATIVA MAIS!
-                                    // O sistema continua verificando automaticamente
-                                    
-                                } else {
-                                    console.error('❌ Erro ao enviar comando:', comandoResponse.status);
-                                    const errorText = await comandoResponse.text();
-                                    console.error('Erro:', errorText);
-                                }
-                            } else {
-                                console.log(`⏳ Aguardando... Faltam ${participantesNecessarios - participantesAtuais} participantes`);
-                            }
-                            
-                        } catch (error) {
-                            console.error('❌ Erro na verificação:', error);
-                            console.error('Stack:', error.stack);
+
+                    console.log('🎯 Número atingido! Enviando comando de sorteio...');
+                    console.log('♾️ Modo infinito ativo');
+
+                    // ✅ ÚNICO disparo de sorteio
+                    const comandoResponse = await fetch(
+                        CONFIG.buildURL(CONFIG.API.ENVIAR_COMANDO),
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                tipo: 'INICIAR_SORTEIO',
+                                acao: 'sortear',
+                                participantes: response.participantes,
+                                timestamp: Date.now()
+                            })
                         }
-                    }, 10000); // Verificar a cada 10 segundos
-                    
-                } else {
-                    // ========================================
-                    // DESATIVAR SORTEIO AUTOMÁTICO
-                    // ========================================
-                    desativarSorteioAutomatico();
+                    );
+
+                    if (!comandoResponse.ok) {
+                        throw new Error('Erro ao enviar comando de sorteio');
+                    }
+
+                    console.log('✅ Comando de sorteio enviado com sucesso');
+
+                    // ⏳ Aguarda o tempo do sorteio antes de liberar
+                    setTimeout(() => {
+                        sorteioEmExecucao = false;
+                        console.log('🔓 Trava liberada – pronto para próximo ciclo');
+                    }, 5000); // ajuste se quiser
+
+                } catch (error) {
+                    console.error('❌ Erro no sorteio automático:', error);
+                    sorteioEmExecucao = false; // garante liberação da trava
                 }
             }
+
+
 
             // Função auxiliar para desativar
             function desativarSorteioAutomatico() {
@@ -1287,42 +1284,19 @@ ARQUIVO 3: admin.html - Painel Administrativo Completo
             }
 
             // Função auxiliar para atualizar o botão
-            function atualizarBotaoSorteio(ativo) {
-                try {
-                    let btnSorteio = document.getElementById('btn-sorteio-automatico');
-                    
-                    if (!btnSorteio) {
-                        const botoes = document.querySelectorAll('button');
-                        btnSorteio = Array.from(botoes).find(btn => 
-                            btn.getAttribute('onclick') && 
-                            btn.getAttribute('onclick').includes('executarSorteioAutomatico')
-                        );
-                    }
-                    
-                    if (!btnSorteio) {
-                        const botoes = document.querySelectorAll('button');
-                        btnSorteio = Array.from(botoes).find(btn => 
-                            btn.textContent.includes('SORTEIO AUTOMÁTICO')
-                        );
-                    }
-                    
-                    if (btnSorteio) {
-                        if (ativo) {
-                            btnSorteio.style.background = '#ff4444';
-                            btnSorteio.innerHTML = '🛑 DESATIVAR SORTEIO AUTOMÁTICO';
-                            console.log('✅ Botão: DESATIVAR (vermelho)');
-                        } else {
-                            btnSorteio.style.background = '#4CAF50';
-                            btnSorteio.innerHTML = '✅ ATIVAR SORTEIO AUTOMÁTICO';
-                            console.log('✅ Botão: ATIVAR (verde)');
-                        }
-                    } else {
-                        console.error('❌ Botão não encontrado!');
-                    }
-                } catch (error) {
-                    console.error('❌ Erro ao atualizar botão:', error);
+           function atualizarBotaoSorteio(ativo) {
+                const btnAtivar = document.getElementById('btn-sorteio-automatico');
+                const btnDesativar = document.getElementById('btn-desativar-sorteio');
+
+                if (ativo) {
+                    btnAtivar.style.display = 'none';
+                    btnDesativar.style.display = 'block';
+                } else {
+                    btnAtivar.style.display = 'block';
+                    btnDesativar.style.display = 'none';
                 }
             }
+
 
             // ============================================ 
             // DISPARAR SORTEIO NAS ROLETAS ABERTAS
@@ -1330,14 +1304,14 @@ ARQUIVO 3: admin.html - Painel Administrativo Completo
             function abrirRoleta() {
                 console.log('🎰 Disparando comando de sorteio para todas as roletas abertas...');
                 
-                // Enviar comando via localStorage para todas as abas escutarem
                 const comandoSorteio = {
                     acao: 'INICIAR_SORTEIO',
                     timestamp: Date.now()
                 };
-                
+
+                // 🔹 Gravar o comando para outras abas captarem
                 localStorage.setItem('comando_sorteio', JSON.stringify(comandoSorteio));
-                
+                                
                 // Remover o comando após 1 segundo (para permitir novos sorteios)
                 setTimeout(() => {
                     localStorage.removeItem('comando_sorteio');
@@ -1346,6 +1320,7 @@ ARQUIVO 3: admin.html - Painel Administrativo Completo
                 mostrarNotificacao('🎰 Comando de sorteio enviado para todas as roletas!', 'success');
                 console.log('✅ Comando enviado:', comandoSorteio);
             }
+
 
             // Mostrar sorteio na roleta
             function mostrarSorteioNaRoleta(sorteio) {
@@ -1359,11 +1334,6 @@ ARQUIVO 3: admin.html - Painel Administrativo Completo
                     }, '*');
                 }
             }
-
-            // Inicializar ao carregar a página
-            document.addEventListener('DOMContentLoaded', () => {
-                carregarConfigSorteio();
-            });
 
                     let participantes = [];
                     let premios = [];
@@ -1391,24 +1361,7 @@ ARQUIVO 3: admin.html - Painel Administrativo Completo
                     });
             }
 
-            // Deletar participante
-            function deletarParticipante(id) {
-                if (!confirm('Deseja realmente excluir este participante?')) return;
-                
-                CONFIG.fetch(`${CONFIG.API.PARTICIPANTES}/${id}`, { method: 'DELETE' })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Participante excluído!');
-                            carregarParticipantes();
-                        }
-                    })
-                    .catch(erro => {
-                        console.error('Erro ao excluir:', erro);
-                        alert('Erro ao excluir participante');
-                    });
-            }
-
+            
             // Renderizar participantes
 function renderizarParticipantes() {
     const tbody = document.getElementById('tabela-participantes');
@@ -1477,10 +1430,6 @@ function renderizarParticipantes() {
                     .then(data => {
                         console.log('📦 Prêmios carregados:', data);
                         premios = data || [];
-                    })
-                    .then(data => {
-                        console.log('📦 Prêmios carregados:', data);
-                        premios = data || [];
                         renderizarPremios();
                         atualizarStats();
                     })
@@ -1492,6 +1441,7 @@ function renderizarParticipantes() {
                         }
                     });
             }
+
 
             function renderizarPremios() {
                 console.log('🎨 Renderizando prêmios...', premios);
@@ -1822,7 +1772,7 @@ function renderizarParticipantes() {
                 }
                 
                 // 🔧 SUBTRAIR 3 HORAS para ajustar ao horário de Brasília
-                data.setHours(data.getHours() - 3);f
+                data.setHours(data.getHours() - 3);
                 
                 // Extrair componentes da data ajustada
                 const ano = data.getFullYear();
@@ -2336,8 +2286,32 @@ function renderizarParticipantes() {
 
         // Filtrar sorteios
         function filtrarSorteiosAgendados() {
-            renderizarSorteiosAgendados();
+            const status = document.getElementById('filtroStatusSorteio').value;
+            const dataInicio = document.getElementById('filtroDataInicio').value;
+            const dataFim = document.getElementById('filtroDataFim').value;
+
+            let filtrados = [...sorteiosAgendados];
+
+            // 📌 Filtro por status
+            if (status !== 'todos') {
+                filtrados = filtrados.filter(s => s.status === status);
+            }
+
+            // 📌 Filtro por data inicial
+            if (dataInicio) {
+                const inicio = new Date(dataInicio);
+                filtrados = filtrados.filter(s => new Date(s.data_sorteio) >= inicio);
+            }
+
+            // 📌 Filtro por data final
+            if (dataFim) {
+                const fim = new Date(dataFim);
+                filtrados = filtrados.filter(s => new Date(s.data_sorteio) <= fim);
+            }
+
+            renderizarSorteiosAgendados(filtrados);
         }
+
 
         // Inicializar
         recarregarDados();
@@ -2647,9 +2621,32 @@ function renderizarParticipantes() {
 
         // Filtrar raspadinhas
         function filtrarRaspadinhasAgendadas() {
-            // Implementar filtros se necessário
-            renderizarRaspadinhasAgendadas();
+            const status = document.getElementById('filtroStatusRaspadinha')?.value;
+            const dataInicio = document.getElementById('filtroDataInicioRaspadinha')?.value;
+            const dataFim = document.getElementById('filtroDataFimRaspadinha')?.value;
+
+            let filtradas = [...raspadinhasAgendadas];
+
+            // 📌 Status
+            if (status && status !== 'todos') {
+                filtradas = filtradas.filter(r => r.status === status);
+            }
+
+            // 📌 Data início
+            if (dataInicio) {
+                const ini = new Date(dataInicio);
+                filtradas = filtradas.filter(r => new Date(r.data_raspadinha) >= ini);
+            }
+
+            // 📌 Data fim
+            if (dataFim) {
+                const fim = new Date(dataFim);
+                filtradas = filtradas.filter(r => new Date(r.data_raspadinha) <= fim);
+            }
+
+            renderizarRaspadinhasAgendadas(filtradas);
         }
+
         
 
         // Carregar dados iniciais ao abrir o painel
@@ -2679,103 +2676,6 @@ function renderizarParticipantes() {
             }
         }, 60000); // A cada 60 segundos
 
-
-        // ============================================
-        // VERIFICAÇÃO PERIÓDICA DE PARTICIPANTES
-        // ============================================
-
-        let intervaloVerificacao = null;
-
-        function iniciarVerificacaoPeriodica() {
-            if (window.intervaloVerificacao) {
-                clearInterval(window.intervaloVerificacao);
-            }
-            
-            console.log('🔄 Iniciando verificação periódica a cada 10 segundos...');
-            
-            window.intervaloVerificacao = setInterval(async () => {
-                try {
-                    const response = await fetch(CONFIG.buildURL(CONFIG.API.VERIFICAR_COMANDO));
-                    const data = await response.json();
-                    
-                    console.log('🔍 Verificando sorteio:', data);
-                    
-                    if (data.deve_sortear) {
-                        console.log('🎰 CONDIÇÕES ATENDIDAS! Iniciando sorteio...');
-                        clearInterval(window.intervaloVerificacao);
-                        window.intervaloVerificacao = null;
-                        
-                        // Executar sorteio
-                        await executarSorteioAutomatico();
-                    } else {
-                        console.log(`⏳ Aguardando... (${data.participantes_atuais || 0}/${data.participantes_necessarios || 0})`);
-                        
-                        // Atualizar barra de progresso SE existir
-                        try {
-                            const barraProgresso = document.getElementById('barra-progresso');
-                            const textoProgresso = document.getElementById('texto-progresso');
-                            
-                            if (barraProgresso && textoProgresso) {
-                                const porcentagem = Math.min(
-                                    (data.participantes_atuais / data.participantes_necessarios) * 100,
-                                    100
-                                );
-                                
-                                barraProgresso.style.width = porcentagem + '%';
-                                barraProgresso.textContent = Math.round(porcentagem) + '%';
-                                textoProgresso.textContent = 
-                                    `${data.participantes_atuais} / ${data.participantes_necessarios} participantes`;
-                            }
-                        } catch (uiError) {
-                            // Ignorar erro de UI silenciosamente
-                        }
-                    }
-                    
-                } catch (error) {
-                    console.error('❌ Erro na verificação periódica:', error);
-                }
-            }, 10000); // 10 segundos
-        }
-
-        // ============================================
-        // RETOMAR SORTEIO AUTOMÁTICO AO CARREGAR
-        // ============================================
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                console.log('📄 Página carregada, verificando configurações...');
-                
-                const response = await fetch(CONFIG.buildURL('/api/configuracoes'));
-                
-                if (!response.ok) {
-                    console.log('⚠️ Não foi possível buscar configurações');
-                    return;
-                }
-                
-                const configs = await response.json();
-                const sorteioAtivo = configs.find(c => c.chave === 'sorteio_automatico_ativo');
-                
-                if (sorteioAtivo && sorteioAtivo.valor === 'true') {
-                    console.log('✅ Sorteio automático estava ativo, retomando verificação...');
-                    
-                    const configParticipantes = configs.find(c => c.chave === 'participantes_necessarios');
-                    const necessarios = configParticipantes ? configParticipantes.valor : '?';
-                    
-                    console.log(`   Necessários: ${necessarios} participantes`);
-                    
-                    // Iniciar verificação
-                    iniciarVerificacaoPeriodica();
-                } else {
-                    console.log('ℹ️ Sorteio automático está desativado');
-                }
-                
-            } catch (error) {
-                console.error('❌ Erro ao verificar configurações:', error);
-            }
-        });
-
-        console.log('✅ Funções de sorteio automático carregadas!');
- 
     </script>
     
 </body>
