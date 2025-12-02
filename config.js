@@ -116,7 +116,7 @@ const CONFIG = {
     // 🔐 CONFIGURAÇÕES DE SEGURANÇA
     SECURITY: {
         ALLOWED_ORIGINS: [
-            'https://roleta-raspadinha.onrender.com',
+            'https://roleta-backend-zx8t.onrender.com',
             'https://roleta-raspadinha-m7li2z5db-lucascardosonobodys-projects.vercel.app/dashboard.html',
             'https://nasorte.vercel.app',
             'https://geo-iot.com',
