@@ -904,44 +904,85 @@ app.delete('/api/raspadinhas-agendadas/:id', async (req, res) => {
 
 // Raspadinha ativa agora
 app.get('/api/raspadinha-ativa-agora', async (req, res) => {
-    const agora = new Date();
-    const dataHoje = agora.toISOString().split('T')[0];
-    const horaAtual = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', hour12: false });
-    
-    try {
-        const result = await pool.query(
-            'SELECT * FROM raspadinhas_agendadas WHERE data_raspadinha = $1 AND hora_inicio <= $2 AND hora_fim >= $3 AND status IN ($4, $5) LIMIT 1',
-            [dataHoje, horaAtual, horaAtual, 'pendente', 'ativo']
-        );
-        
-        if (result.rows.length === 0) {
-            return res.json({ ativo: false, premios: [] });
-        }
-        
-        const raspadinha = result.rows[0];
-        let premiosDistribuicao = [];
-        try { 
-            premiosDistribuicao = JSON.parse(raspadinha.premios_distribuicao || '[]'); 
-        } catch (e) {
-            console.error('❌ Erro ao parsear prêmios:', e);
-        }
-        
-        const premiosAtivos = premiosDistribuicao.filter(p => p.horario_inicio <= horaAtual && p.horario_fim >= horaAtual);
-        
-        res.json({
-            ativo: true,
-            raspadinha_id: raspadinha.id,
-            data_raspadinha: raspadinha.data_raspadinha,
-            hora_inicio: raspadinha.hora_inicio,
-            hora_fim: raspadinha.hora_fim,
-            premios_ativos: premiosAtivos,
-            todos_premios: premiosDistribuicao
-        });
-    } catch (err) {
-        console.error('❌ Erro ao verificar raspadinha ativa:', err);
-        res.status(500).json({ ativo: false, premios: [] });
+  try {
+    // 1) Banco decide se existe raspadinha ativa AGORA
+    const { rows } = await pool.query(`
+      SELECT *
+      FROM raspadinhas_agendadas
+      WHERE data_raspadinha = CURRENT_DATE
+        AND CURRENT_TIME BETWEEN hora_inicio AND hora_fim
+        AND status IN ('pendente', 'ativo')
+      ORDER BY hora_inicio ASC
+      LIMIT 1;
+    `);
+
+    if (rows.length === 0) {
+      return res.json({
+        ativo: false,
+        premios_ativos: [],
+        todos_premios: []
+      });
     }
+
+    const raspadinha = rows[0];
+
+    // 2) Parse do JSON premios_distribuicao
+    let premiosDistribuicao = [];
+    try {
+      premiosDistribuicao = JSON.parse(raspadinha.premios_distribuicao || '[]');
+    } catch (e) {
+      console.error('❌ Erro ao parsear prêmios:', e);
+      premiosDistribuicao = [];
+    }
+
+    // 3) Hora atual em HH:MM (pra comparar com horario_inicio/horario_fim do JSON)
+    const agora = new Date();
+    const horaAtual = agora.toTimeString().slice(0,5); // "HH:MM"
+
+    // 4) Filtro por horário dos prêmios (se tiver horario_inicio/horario_fim)
+    const premiosAtivosBrutos = premiosDistribuicao.filter(p => {
+      if (!p.horario_inicio || !p.horario_fim) return true; // se não tiver janela, considera sempre ativo
+      return p.horario_inicio <= horaAtual && p.horario_fim >= horaAtual;
+    });
+
+    // 5) Normalizar pro formato que o front espera: { premio_nome: '...' }
+    const normalizar = (p) => {
+      if (typeof p === 'string') {
+        return { premio_nome: p };
+      }
+      if (p.premio_nome) {
+        return { premio_nome: p.premio_nome };
+      }
+      if (p.nome) {
+        return { premio_nome: p.nome };
+      }
+      return { premio_nome: String(p) };
+    };
+
+    const premios_ativos = premiosAtivosBrutos.map(normalizar);
+    const todos_premios = premiosDistribuicao.map(normalizar);
+
+    return res.json({
+      ativo: true,
+      raspadinha_id: raspadinha.id,
+      data_raspadinha: raspadinha.data_raspadinha,
+      hora_inicio: raspadinha.hora_inicio,
+      hora_fim: raspadinha.hora_fim,
+      premios_ativos,
+      todos_premios
+    });
+
+  } catch (err) {
+    console.error('❌ Erro ao verificar raspadinha ativa:', err);
+    return res.status(500).json({
+      ativo: false,
+      premios_ativos: [],
+      todos_premios: [],
+      erro: 'erro_interno'
+    });
+  }
 });
+
 
 // Configurações
 app.get('/api/configuracoes', async (req, res) => {
