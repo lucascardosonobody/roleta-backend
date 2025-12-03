@@ -2364,6 +2364,7 @@ function renderizarParticipantes() {
             });
             
             tbody.innerHTML = raspadinhasAgendadas.map(r => {
+                    console.log('📅 r.data_raspadinha bruto:', r.data_raspadinha, typeof r.data_raspadinha);
                 const dataObj = new Date(r.data_raspadinha + 'T00:00:00-03:00');
                 const data = dataObj.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
                 const premios = JSON.parse(r.premios_distribuicao || '[]');
